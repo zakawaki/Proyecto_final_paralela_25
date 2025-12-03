@@ -7,7 +7,7 @@ namespace TSPProject
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== PROYECTO TSP:(jose) ===");
+            Console.WriteLine("=== PROYECTO TSP: ===");
             Console.Write("Ingrese el numero de ciudades (ejemlo. 10, 15, 20): ");
 
             if (!int.TryParse(Console.ReadLine(), out int numCities) || numCities < 2)
