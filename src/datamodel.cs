@@ -28,10 +28,10 @@ namespace TSPProject
         // SEMILLA FIJA: obligatorio para que las pruebas sean repetibles.
         private static readonly Random _rnd = new Random(1234);
 
-        /// <summary>
+        
         /// Genera un arreglo de ciudades con coordenadas en [0, canvasSize].
         /// Determinista (misma semilla) para cada ejecucion.
-        /// </summary>
+        
         public static City[] GenerateCities(int count, double canvasSize = 1000.0)
         {
             if (count < 1) throw new ArgumentException("count debe ser >= 1", nameof(count));
@@ -46,10 +46,10 @@ namespace TSPProject
             return cities;
         }
 
-        /// <summary>
+       
         /// Calcula y devuelve la matriz de distancias Euclidianas (double[,]).
         /// matrix[i,j] = distancia desde ciudad i a ciudad j.
-        /// </summary>
+        
         public static double[,] CalculateDistanceMatrix(City[] cities)
         {
             if (cities == null) throw new ArgumentNullException(nameof(cities));
@@ -77,9 +77,9 @@ namespace TSPProject
             return matrix;
         }
 
-        /// <summary>
+     
         /// (Opcional) Imprime un pequeno resumen de las ciudades en consola.
-        /// </summary>
+       
         public static void PrintCities(City[] cities, int maxToShow = 10)
         {
             if (cities == null) return;
@@ -94,4 +94,5 @@ namespace TSPProject
             }
         }
     }
+
 }
