@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zakawaki\\source\\repos\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\ProyectoFinal Paralela.csproj",
+      "projectUniqueName": "C:\\Users\\zakawaki\\Documents\\GitHub\\Proyecto_final_paralela_25\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\ProyectoFinal Paralela.csproj",
       "projectName": "ProyectoFinal Paralela",
-      "projectPath": "C:\\Users\\zakawaki\\source\\repos\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\ProyectoFinal Paralela.csproj",
+      "projectPath": "C:\\Users\\zakawaki\\Documents\\GitHub\\Proyecto_final_paralela_25\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\ProyectoFinal Paralela.csproj",
       "packagesPath": "C:\\Users\\zakawaki\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zakawaki\\source\\repos\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\obj\\",
+      "outputPath": "C:\\Users\\zakawaki\\Documents\\GitHub\\Proyecto_final_paralela_25\\ProyectoFinal Paralela\\ProyectoFinal Paralela\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
