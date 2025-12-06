@@ -27,52 +27,78 @@ namespace TSPProject
     // Esta clase contiene metodos para generar ciudades y calcular distancias para pruebas del TSP
     public static class TspDataGenerator
     {
-        // Esta semilla fija asegura que los datos generados sean siempre los mismos para pruebas repetibles
-        private static readonly Random _rnd = new Random(1234);
+        // Objeto Random usado para generar numeros aleatorios pero se pone fija con el 1234
+        
+        private static Random _rnd = new Random(1234);
 
+        
+        public static void UseFixedSeed()
+        {
+            _rnd = new Random(1234);
+        }
 
-        // Este metodo genera un arreglo de ciudades con posiciones aleatorias dentro de un tamano dado
-        // Sirve para crear datos de prueba sin depender de archivos externos
+        // Activa una semilla aleatoria basada en el reloj d tu maquina
+        // Esto provoca que en cada ejecucion se generen ciudades diferentes
+        public static void UseRandomSeed()
+        {
+            _rnd = new Random(); // semilla tomada del tiempo del sistema
+        }
 
+        // Metodo que genera un arreglo de ciudades con coordenadas aleatorias
+        // count cantidad de ciudades a generar
+        // canvasSize: tamano del plano 1000x1000 por defecto
         public static Ciudades[] GenerateCities(int count, double canvasSize = 1000.0)
         {
+            // Valida que se solicite al menos 1 ciudad
             if (count < 1) throw new ArgumentException("count debe ser >= 1", nameof(count));
 
-            // Aqui se crea el arreglo y se generan las coordenadas aleatorias para cada ciudad
+            // Arreglo que almacenara todas las ciudades generadas
             Ciudades[] cities = new Ciudades[count];
+
+            // Ciclo para crear cada ciudad y asignarle coordenadas aleatorias
             for (int i = 0; i < count; i++)
             {
-                double x = _rnd.NextDouble() * canvasSize;   // Coordenada X aleatoria
-                double y = _rnd.NextDouble() * canvasSize;   // Coordenada Y aleatoria
+                // Coordenada X aleatoria entre 0 y canvasSize
+                double x = _rnd.NextDouble() * canvasSize;
+
+                // Coordenada Y aleatoria entre 0 y canvasSize
+                double y = _rnd.NextDouble() * canvasSize;
+
+                // Crea una ciudad con ID = i y sus coordenadas generadas
                 cities[i] = new Ciudades(i, x, y);
             }
+
             return cities;
         }
 
 
-        // Este metodo crea una matriz donde cada espacio [i j] contiene la distancia entre dos ciudades
+        // Metodo que calcula la matriz de distancias entre todas las ciudades
+        // matrix[i, j] representa la distancia desde la ciudad i hasta la ciudad j
 
         public static double[,] CalculateDistanceMatrix(Ciudades[] cities)
         {
             if (cities == null) throw new ArgumentNullException(nameof(cities));
 
             int n = cities.Length;
+            // Matriz que almacenara todas las distancias.
             double[,] matrix = new double[n, n];
-
-            // Aqui se recorren todas las parejas de ciudades para calcular sus distancias
+            // Recorre todas las combinaciones de ciudades.
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < n; j++)
                 {
+                    // Distancia de una ciudad a si misma es 0.
                     if (i == j)
                     {
-                        matrix[i, j] = 0.0; // Una ciudad consigo misma siempre tiene distancia cero
+                        matrix[i, j] = 0.0;
                     }
                     else
                     {
+                        // Diferencias en coordenadas
                         double dx = cities[i].X - cities[j].X;
                         double dy = cities[i].Y - cities[j].Y;
-                        matrix[i, j] = Math.Sqrt(dx * dx + dy * dy); // Distancia euclidiana
+                        // Distancia entre dos puntos; sqrt(dx al cuadrado + dy al cuadrado)
+                        matrix[i, j] = Math.Sqrt(dx * dx + dy * dy);
                     }
                 }
             }
