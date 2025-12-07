@@ -98,7 +98,35 @@ class Program
 
             case "2":
                 Console.WriteLine("Ejecutando algoritmo Paralelo...");
-                break;
+
+                // Iniciamos la nueva clase
+                var solverPl = new TSPSolverParallel();
+
+                // Medimos el tiempo
+                Stopwatch sw_pl = Stopwatch.StartNew();
+
+                // Ejecutamos el metodo solve pasando las distancias generadas
+                solverPl.Solve(distances);
+
+                sw_pl.Stop();
+
+                // Mostracion del resultado
+                Console.WriteLine("=== Resultados secuenciales ===");
+
+                // Verificamos si encontro ruta
+                if (solverPl.BestRoute != null && solverPl.BestRoute.Count > 0)
+                {
+                    Console.WriteLine($"Mejor costo encontrado: {solverPl.BestCost:F3}");
+                    Console.WriteLine($"Mejor ruta: " + string.Join(" -> ", solverPl.BestRoute) + " -> 0");
+                }
+
+                else
+                {
+                    Console.WriteLine("No se encontro una ruta valida. Favor revisar logica o tiempo");
+                }
+
+                Console.WriteLine($"Tiempo de ejecucion: {sw_pl.ElapsedMilliseconds} ms");
+                    break;
 
             case "3":
                 Console.WriteLine("Ejecutando Pruebas y Metricas...");
