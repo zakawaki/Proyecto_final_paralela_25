@@ -1,4 +1,5 @@
-﻿using TSPProject;
+﻿using System.Diagnostics;
+using TSPProject;
 
 class Program
 {
@@ -80,7 +81,19 @@ class Program
         switch (option)
         {
             case "1":
-                Console.WriteLine("Ejecutando algoritmo Secuencial...");
+                Console.WriteLine("Ejecutando algoritmo Secuencial...\n");
+
+                var solver = new TSPSolverSequential();
+
+                Stopwatch sw = Stopwatch.StartNew();
+                solver.Solve(distances);
+                sw.Stop();
+
+                Console.WriteLine("=== RESULTADOS SECUENCIALES ===");
+                Console.WriteLine($"Mejor Costo Encontrado: {solver.BestCost:F3}");
+                Console.WriteLine("Mejor Ruta: " + string.Join(" -> ", solver.BestRoute) + " -> 0");
+
+                Console.WriteLine($"Tiempo de Ejecucion: {sw.ElapsedMilliseconds} ms");
                 break;
 
             case "2":
