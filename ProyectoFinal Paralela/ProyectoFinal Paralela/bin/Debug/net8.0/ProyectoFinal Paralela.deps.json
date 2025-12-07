@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ProyectoFinal Paralela/1.0.0": {
+        "runtime": {
+          "ProyectoFinal Paralela.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProyectoFinal Paralela/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
