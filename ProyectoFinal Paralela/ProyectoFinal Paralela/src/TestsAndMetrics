@@ -1,8 +1,3 @@
-// TestsAndMetrics.cs
-// Autor: Rosa Carolina
-// Mi parte (Pruebas y métricas). Lo dejo simple y directo.
-// Pegar este archivo en el mismo proyecto donde está Program.cs.
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
