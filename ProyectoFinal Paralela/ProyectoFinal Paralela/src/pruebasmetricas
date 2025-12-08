@@ -1,9 +1,3 @@
-// TSPSolver.cs
-// Rosa Carolina para que el proyecto pueda correr las pruebas y métricas.
-// Aquí no uso Branch & Bound porque esa parte no es la mía, yo solo necesito algo
-// que calcule rutas para poder medir tiempos. Por eso puse un brute force sencillo,
-// que funciona con pocos nodos (8, 9, 10).
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
