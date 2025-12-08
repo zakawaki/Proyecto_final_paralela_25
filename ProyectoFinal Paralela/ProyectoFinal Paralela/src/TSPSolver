@@ -1,7 +1,6 @@
-// TSPSolver.cs
 // Puente para que Program.cs encuentre la clase TSPSolver.
 // Llamo a la implementación que ya tienes en 'pruebasmetricas'.
-// Autor: Rosa Carolina (yo lo dejé como puente para no tocar Program.cs).
+// se dejo como puente para no tocar Program.cs.
 
 using System;
 
