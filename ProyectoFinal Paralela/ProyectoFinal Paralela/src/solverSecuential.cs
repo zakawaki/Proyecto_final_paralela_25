@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+// REALIZADO POR IMANOL RODRIGUEZ
+// SOLUCIÓN SECUENCIAL DE LA PODA
+// PROCEDO A EXPLICAR EL CODIGO POR BLOQUE 
+// METIENDO MANO
+
 namespace TSPProject
 {
 
