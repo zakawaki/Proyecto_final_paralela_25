@@ -126,7 +126,7 @@ class Program
                 }
 
                 Console.WriteLine($"Tiempo de ejecucion: {sw_pl.ElapsedMilliseconds} ms");
-                    break;
+                break;
 
             case "3":
                 Console.WriteLine("Ejecutando Pruebas y Metricas...");
