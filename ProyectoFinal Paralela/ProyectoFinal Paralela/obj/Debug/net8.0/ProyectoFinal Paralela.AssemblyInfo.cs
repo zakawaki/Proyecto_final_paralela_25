@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProyectoFinal Paralela")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b877160a126fe211d003564dfac3812a90b3a6b2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+baf413d57f4a0bb6937c4bb4aa6fc05da2ea5c40")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProyectoFinal Paralela")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProyectoFinal Paralela")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
