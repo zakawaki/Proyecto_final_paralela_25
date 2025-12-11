@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace TSPProject
+{
+    public static class TSPSolver
+    {
+        // Resultado que espera Program: BestCost y BestTour
+        public struct Result
+        {
+            public double BestCost;
+            public int[] BestTour;
+        }
+
+        // Secuencial: llamo a la implementación que ya existe
+        public static Result SolveSequential(double[,] dist)
+        {
+            var r = global::pruebasmetricas.SolveSequential(dist);
+            return new Result { BestCost = r.BestCost, BestTour = r.BestTour };
+        }
+
+        // Paralelo: llamo a la implementación que ya existe
+        public static Result SolveParallel(double[,] dist, int threads)
+        {
+            var r = global::pruebasmetricas.SolveParallel(dist, threads);
+            return new Result { BestCost = r.BestCost, BestTour = r.BestTour };
+        }
+    }
+}
