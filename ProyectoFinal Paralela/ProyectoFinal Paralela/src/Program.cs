@@ -130,6 +130,8 @@ class Program
 
             case "3":
                 Console.WriteLine("Ejecutando Pruebas y Metricas...");
+                var benchmark = new BenchmarkRunner();
+                benchmark.RunBenchmarks();
                 break;
 
             default:
