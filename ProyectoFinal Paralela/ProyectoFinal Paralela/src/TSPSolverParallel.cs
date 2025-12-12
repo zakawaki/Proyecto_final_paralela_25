@@ -21,7 +21,7 @@ namespace TSPProject
         public void Solve(double[,] distance)
         {
             _distance = distance; // Matriz de distancias entre ciudades
-            _numCities = distance.GetLength(0); // Numero de ciudades
+            _numCities = distance.GetLength(0); // Contamos cuantas ciudades hay
 
             // Calculamos una primera solucion rapida para tener una idea del costo minimo
             BestCost = GetGreedyInitialCost();
@@ -31,16 +31,17 @@ namespace TSPProject
             // Esto ayuda a explorar primero las opciones mas prometedoras
 
             _sortedNeighbors = new int[_numCities][]; // Inicializamos el arreglo
-            for (int i = 0; i < _numCities; i++) 
+            for (int i = 0; i < _numCities; i++) // i representa la ciudad actual 
             {
-                var neighbors = new List<int>();
+                var neighbors = new List<int>(); // Lista temporal
                 for (int j = 0; j < _numCities; j++)
                 {
+                    // Nos aseguramos dee que una ciudad no se agregue asi misma como vecina
                     if (i != j) neighbors.Add(j);
                 }
                 // Ordenamos los vecinos desde el mas cercano al mas lejano
                 neighbors.Sort((a, b) => _distance[i, a].CompareTo(_distance[i, b])); // Ordena las ciudades por distancia
-                _sortedNeighbors[i] = neighbors.ToArray();
+                _sortedNeighbors[i] = neighbors.ToArray(); // Lo convertimos en arreglo ya ordenado
             }
 
             // Ejecutamos varios caminos posibles al mismo tiempo para ir mas rapido
@@ -49,21 +50,26 @@ namespace TSPProject
             Parallel.For(1, _numCities, nextCity =>
             {
                 // Cada hilo usa su propia lista de ciudades visitadas
-                bool[] localVisited = new bool[_numCities];
+                bool[] localVisited = new bool[_numCities]; 
                 localVisited[0] = true;
                 localVisited[nextCity] = true;
 
                 // Ruta local que va construyendo cada hilo
-                List<int> localRoute = new List<int>(_numCities + 1);
+                List<int> localRoute = new List<int>(_numCities + 1); // Se crea una lista, cada entero es un ID de la ciudad
                 localRoute.Add(0); // Ciudad inicial
                 localRoute.Add(nextCity); // Segunda ciudad 
 
                 double currentCost = _distance[0, nextCity]; // Costo inicial
 
-                Search(nextCity, currentCost, localVisited, localRoute);
+                Search(nextCity, currentCost, localVisited, localRoute); 
             });
         }
 
+        /// <summary>
+        /// ees una funcion que se llama asi misma una y ota vez para explorar caminos,
+        /// pero tambien es lo suficiente inteligente para dejar de buscar si el camino va mal.
+        /// Es como una mezcla entre Backtracking y Branch and Bound
+        /// </summary>
 
         private void Search(int currentCity, double currentCost, bool[] visited, List<int> currentRoute)
         {
@@ -71,54 +77,59 @@ namespace TSPProject
             if (currentCost >= BestCost) return;
 
             // Si ya visitamos todas las ciudades solo falta volver al inicio
-            if (currentRoute.Count == _numCities) // 
+            if (currentRoute.Count == _numCities) // Esto see ejecuta cuando la lista de ruta tenga tantas ciudades como el total
             {
-                double returnCost = _distance[currentCity, 0];
-                double totalCost = currentCost + returnCost;
+                double returnCost = _distance[currentCity, 0]; // Calculamos la distancia de mi ciudad actual dee vuelta a la de origen
+                double totalCost = currentCost + returnCost; // Precio final de la ruta
 
-                // Si la ruta completa es mejor solcion la guardamos (
+                // Si la ruta completada es mejor solucion la guardamos 
                 if (totalCost < BestCost)
                 {
-                    lock (_lockObj)
+                    lock (_lockObj) // Solo un hilo entra aqui a la vez
                     {
                         // Si aun es mejor, se actualiza y copia la ruta actual
                         if (totalCost < BestCost)
                         {
-                            BestCost = totalCost;
-                            BestRoute = new List<int>(currentRoute);
+                            BestCost = totalCost; 
+                            BestRoute = new List<int>(currentRoute); // Guardamos la ruta ganadora
                         }
                     }
                 }
                 return;
             }
 
+            // Si no heemos terminado ni hemos pasado el costo, seguimos buscando
             // Recorremos los vecinos en el orden mas corto primero
-            foreach (int nextCity in _sortedNeighbors[currentCity])
+
+            foreach (int nextCity in _sortedNeighbors[currentCity]) 
             {
                 // Solo exploramos ciudades NO visitadas
-                if (!visited[nextCity])
+                if (!visited[nextCity]) // Si no ha ido a esta ciudad
                 {
-                    visited[nextCity] = true; 
-                    currentRoute.Add(nextCity); 
+                    visited[nextCity] = true; // La marcamos como verdadera
+                    currentRoute.Add(nextCity); // La agregamos en el "mapa"
 
                     // Avanzamos por el siguiente camino
+                    // "Saltamos" a la siguiente ciudad para explorar sus conexiones,
+                    // arrastrando con nosotros el costo actualizado hasta este punto
                     Search(nextCity,
                            currentCost + _distance[currentCity, nextCity], // El costo va aumentando sumando la distancia
                            visited,
                            currentRoute);
 
-                    // Retrocedemos para probar otra opcion
-                    // Asi se podra probar otra ciudad despues
+                    //-----BACKTRACKING-----
+                    // Marcamos como "no visitada" y la quitamos de la ruta actual
+                    // para dejar el estado limpio y poder probar otro camino diferente en el bucl
                     visited[nextCity] = false;
                     currentRoute.RemoveAt(currentRoute.Count - 1); // Quitamos la ruta actual
                 }
             }
         }
 
-        // Buscamos una ruta inicial simple eligiendo siempre la ciudad mas cercana
+        // Buscamos una ruta inicial simple eligiendo siempre la ciudad mas cercana (el vecino mas cercano)
         private double GetGreedyInitialCost()
         {
-            bool[] visited = new bool[_numCities];
+            bool[] visited = new bool[_numCities]; // Para recordar quee ciudades ya visitamos y no volver a ellas
             visited[0] = true; // comienza en la ciudad 0
             int currentCity = 0;
             double cost = 0;
@@ -128,10 +139,11 @@ namespace TSPProject
             while (citiesVisited < _numCities)
             {
                 int nextCity = -1;
-                double minDist = double.MaxValue;
+                double minDist = double.MaxValue; // 
 
                 for (int i = 1; i < _numCities; i++)
                 {
+                    // si la ciudad i NO ha sido visitada y la distancia es menor que el record actual
                     if (!visited[i] && _distance[currentCity, i] < minDist)
                     {
                         minDist = _distance[currentCity, i]; // Guardamos el nuevo record de distancia mas corta
@@ -143,8 +155,8 @@ namespace TSPProject
                 if (nextCity != -1) // Vereficamos que se encontro una ciudad valida
                 {
                     visited[nextCity] = true; // Marcamos como visitada para no volver a ella
-                    cost += minDist; // Agregamos la distancia al costo total acomulado
-                    currentCity = nextCity; // Actualizamos la ciudad actual
+                    cost += minDist; // Sumamos la distancia al costo total acomulado
+                    currentCity = nextCity; // Nos movemos a esta ciudad
                     citiesVisited++; // Aumentamos el contador de ciudades visitadas
                 }
             }
