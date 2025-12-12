@@ -34,7 +34,7 @@ namespace TSPProject
             Console.WriteLine(new string('-', 65));
 
 
-            //recorrer todos los tamanos de prueba definidos arriba
+            //recorrer todos los tamaños de prueba definidos arriba
             foreach (int n in _testSizes)
             {
                 RunSingleScenario(n); // ejecuta una prueba para ese numero de ciudades
@@ -60,7 +60,7 @@ namespace TSPProject
             {
                 //1. generacion de mapa
                 //tickcount + i para que cada repeticion sea un mapa distinto
-                int seed = Environment.TickCount + i;
+                //int seed = Environment.TickCount + i;
 
                 var cities = TspDataGenerator.GenerateCities(numCities);
                 var map = TspDataGenerator.CalculateDistanceMatrix(cities);
