@@ -1,0 +1,182 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public static class pruebasmetricas
+{
+    // Esta estructura solo me sirve para devolver todo junto:
+    // el costo encontrado y la ruta que corresponde.
+    public struct Result
+    {
+        public double BestCost;
+        public int[] BestTour;
+    }
+
+    // ------------------------ MODO SECUENCIAL ------------------------
+    // Llama al brute force normal. Aquí no hay paralelismo.
+    public static Result SolveSequential(double[,] dist)
+    {
+        return BruteForce(dist);
+    }
+
+    // ------------------------ MODO PARALELO ------------------------
+    // Aquí hago lo mismo, pero repartiendo las permutaciones entre hilos.
+    public static Result SolveParallel(double[,] dist, int threads)
+    {
+        return BruteForceParallel(dist, threads);
+    }
+
+    // ========================================================================
+    //            IMPLEMENTACIÓN DEL BRUTE FORCE (TODAS LAS RUTAS)
+    // ========================================================================
+    // Esta función genera todas las posibles rutas y calcula cuál es la mejor.
+    // Lo hice así porque es fácil y suficiente para correr mis métricas.
+    private static Result BruteForce(double[,] dist)
+    {
+        int n = dist.GetLength(0);
+
+        // Los nodos van del 0 al n-1
+        int[] nodes = Enumerable.Range(0, n).ToArray();
+
+        // Para reducir un poco el trabajo, siempre fijo el nodo 0 primero
+        // y permuto los demás.
+        int[] perm = nodes.Skip(1).ToArray();
+
+        double best = double.MaxValue;
+        int[] bestTour = null;
+
+        // Recorro cada permutación de nodos
+        foreach (var p in Permute(perm))
+        {
+            // Armo la ruta completa empezando por 0
+            int[] tour = new int[n];
+            tour[0] = 0;
+
+            for (int i = 0; i < p.Length; i++)
+                tour[i + 1] = p[i];
+
+            // Calculo el costo de esa ruta
+            double cost = TourCost(dist, tour);
+
+            // Si es la mejor de todas, la guardo
+            if (cost < best)
+            {
+                best = cost;
+                bestTour = (int[])tour.Clone();
+            }
+        }
+
+        return new Result { BestCost = best, BestTour = bestTour };
+    }
+
+    // ========================================================================
+    //           IMPLEMENTACIÓN PARALELA (REPARTE LAS PERMUTACIONES)
+    // ========================================================================
+    private static Result BruteForceParallel(double[,] dist, int threads)
+    {
+        int n = dist.GetLength(0);
+        int[] nodes = Enumerable.Range(0, n).ToArray();
+        int[] perm = nodes.Skip(1).ToArray();
+
+        // Genero primero todas las permutaciones en una lista
+        // porque Parallel.ForEach no acepta iteradores.
+        var allPerms = Permute(perm).ToList();
+
+        double best = double.MaxValue;
+        int[] bestTour = null;
+
+        // Este candado es para que dos hilos no traten de
+        // actualizar el mejor valor al mismo tiempo.
+        object lockObj = new object();
+
+        System.Threading.Tasks.Parallel.ForEach(
+            allPerms,
+            new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = threads },
+            p =>
+            {
+                int[] tour = new int[n];
+                tour[0] = 0;
+
+                for (int i = 0; i < p.Length; i++)
+                    tour[i + 1] = p[i];
+
+                double cost = TourCost(dist, tour);
+
+                // Esto lo encierro en lock porque varias hebras
+                // pueden encontrar rutas al mismo tiempo.
+                lock (lockObj)
+                {
+                    if (cost < best)
+                    {
+                        best = cost;
+                        bestTour = (int[])tour.Clone();
+                    }
+                }
+            }
+        );
+
+        return new Result { BestCost = best, BestTour = bestTour };
+    }
+
+    // ========================================================================
+    //                         GENERADOR DE PERMUTACIONES
+    // ========================================================================
+    // Esto lo hice manualmente porque es más fácil y no dependemos de librerías.
+    private static IEnumerable<int[]> Permute(int[] arr)
+    {
+        if (arr.Length == 1)
+            yield return arr;
+
+        foreach (var item in PermuteInternal(arr, 0))
+            yield return item;
+    }
+
+    private static IEnumerable<int[]> PermuteInternal(int[] arr, int index)
+    {
+        if (index == arr.Length)
+        {
+            // Copio el arreglo para que no se modifique por referencia
+            int[] copy = new int[arr.Length];
+            Array.Copy(arr, copy, arr.Length);
+            yield return copy;
+            yield break;
+        }
+
+        for (int i = index; i < arr.Length; i++)
+        {
+            // Intercambio valores para generar nuevas permutaciones
+            Swap(arr, i, index);
+
+            foreach (var p in PermuteInternal(arr, index + 1))
+                yield return p;
+
+            // Vuelvo a dejarlo como estaba
+            Swap(arr, i, index);
+        }
+    }
+
+    // Cambio simple de elementos
+    private static void Swap(int[] arr, int i, int j)
+    {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // ========================================================================
+    //                        CALCULO DEL COSTO DE LA RUTA
+    // ========================================================================
+    // Recorro la ruta completa y sumo las distancias, incluyendo regresar al inicio.
+    private static double TourCost(double[,] dist, int[] tour)
+    {
+        double cost = 0;
+
+        for (int i = 0; i < tour.Length - 1; i++)
+            cost += dist[tour[i], tour[i + 1]];
+
+        // Cierro el ciclo
+        cost += dist[tour[tour.Length - 1], tour[0]];
+
+        return cost;
+    }
+}
