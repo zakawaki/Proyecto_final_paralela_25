@@ -10,14 +10,14 @@ namespace TSPProject
     public class BenchmarkRunner
     {
         //cantidad de veces que repetimos cada prueba para sacar el tiempo promedio
-        private const int _repetitions = 5;
+        private const int _repetitions = 3;
 
         //si N > 16 la secuencial tarda muchisimo
         //esta regla evita que la PC se trabe haciendo brute-force
         private const int _seqLimit = 16;
 
         //tamanos de mapas que vamos a probar (cantidad de ciudades)
-        private readonly int[] _testSizes = { 10, 15, 20, 22 };
+        private readonly int[] _testSizes = { 8, 12, 16 };
 
         public void RunBenchmarks()
         {
@@ -26,7 +26,7 @@ namespace TSPProject
             Console.WriteLine("ADVERTENCIA: Estas ejecutando en modo DEBUG.");
             Console.WriteLine("Para metricas reales, cambia configuracion RELEASE.\n");
 #endif
-            Console.WriteLine("===Iniciando Benchmark TSP (Avg de 5 corridas)===");
+            Console.WriteLine("===Iniciando Benchmark TSP (Avg de 3 corridas)===");
             Console.WriteLine($"Limite Secuencial: {_seqLimit} ciudades.");
 
             //impresion del encabezado de la tabla
@@ -34,7 +34,7 @@ namespace TSPProject
             Console.WriteLine(new string('-', 65));
 
 
-            //recorrer todos los tamanos de prueba definidos arriba
+            //recorrer todos los tamaños de prueba definidos arriba
             foreach (int n in _testSizes)
             {
                 RunSingleScenario(n); // ejecuta una prueba para ese numero de ciudades
@@ -46,7 +46,7 @@ namespace TSPProject
 
         private void RunSingleScenario(int numCities)
 
-        {   
+        {
             //listas donde guardaremos los tiempos de cada repeticion
             List<long> timesSeq = new List<long>();
             List<long> timesPar = new List<long>();
@@ -57,10 +57,10 @@ namespace TSPProject
 
             //repetimos varias veces para evitar ruido del sistema operativo
             for (int i = 0; i < _repetitions; i++)
-            { 
+            {
                 //1. generacion de mapa
                 //tickcount + i para que cada repeticion sea un mapa distinto
-                int seed = Environment.TickCount + i;
+                //int seed = Environment.TickCount + i;
 
                 var cities = TspDataGenerator.GenerateCities(numCities);
                 var map = TspDataGenerator.CalculateDistanceMatrix(cities);
@@ -98,7 +98,10 @@ namespace TSPProject
             //el promedio paralelo
             double avgPar = GetAverage(timesPar);
 
-            //variables de texto para imprimir resultados
+            //manejos de errores
+            //si no se ejecuta la version secuencial, se muestran valores por defecto("N/A" para secuencial, "INF" para speedup)
+            //se evita division por cero al calcular el speedup
+            //esto asegura que la tabla siempre se imprima correctamente, incluso si faltan datos
             string strSeq = "N/A";
             string strSpeedup = "INF"; //si no hay secuencial, el speedup es infinito
 
@@ -117,10 +120,10 @@ namespace TSPProject
                 }
             }
 
-        //imprime fila de la tabla
-        Console.WriteLine("{0,-10} | {1,-15} | {2,-15} | {3,-10}", numCities, strSeq, avgPar.ToString("F2"), strSpeedup);
+            //imprime fila de la tabla
+            Console.WriteLine("{0,-10} | {1,-15} | {2,-15} | {3,-10}", numCities, strSeq, avgPar.ToString("F2"), strSpeedup);
 
-            }
+        }
 
         //metodo auxiliar que calcula el promedio de una lista de tiempos
         private double GetAverage(List<long> times)
