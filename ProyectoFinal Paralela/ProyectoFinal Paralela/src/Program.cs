@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using TSPProject;
 
-Console.WriteLine("=== PROYECTO TSP ===");
+Console.WriteLine("PROYECTO TSP (Traveling Salesman Problem )");
 
-// ======= LIMITE DE CIUDADES =======
+// LIMITE DE CIUDADES 
 Console.Write("Ingrese el numero de ciudades (maximo 16) o Ejecute una Prueba Presionando 'p': ");
 
 // Decide si ejecutar el programa completo o directameten el BenchMark
@@ -30,7 +30,7 @@ if (!int.TryParse(Option, out int numCities) || numCities < 2 || numCities > 16)
     // Si el usuario escribe algo no valido, menor que 2 o mayor que 16, se asignan 16 por defecto
 }
 
-// ======= MENU DE SEMILLAS ======
+// MENU DE SEMILLAS 
 Console.WriteLine("\nSeleccione el tipo de semilla:");
 Console.WriteLine("1. Semilla Fija (siempre genera los mismos datos)");
 Console.WriteLine("2. Semilla Aleatoria / Hibrida");
@@ -62,7 +62,7 @@ switch (seedOption)
 }
 
 
-// ======= GENERAR CIUDADES =======
+//  GENERAR CIUDADES 
 Console.WriteLine($"\nGenerando {numCities} ciudades...");
 
 // Genera una lista oarreglo de ciudades con posiciones aleatorias en el plano
