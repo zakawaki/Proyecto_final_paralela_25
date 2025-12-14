@@ -14,10 +14,10 @@ namespace TSPProject
 
         //si N > 16 la secuencial tarda muchisimo
         //esta regla evita que la PC se trabe haciendo brute-force
-        private const int _seqLimit = 16;
+        private const int _seqLimit = 15;
 
         //tamanos de mapas que vamos a probar (cantidad de ciudades)
-        private readonly int[] _testSizes = { 8, 12, 16 };
+        private readonly int[] _testSizes = { 5, 10, 15 };
 
         public void RunBenchmarks()
         {

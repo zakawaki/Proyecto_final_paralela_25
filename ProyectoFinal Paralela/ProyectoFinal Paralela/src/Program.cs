@@ -4,7 +4,7 @@ using TSPProject;
 Console.WriteLine("PROYECTO TSP (Traveling Salesman Problem )");
 
 // LIMITE DE CIUDADES 
-Console.Write("Ingrese el numero de ciudades (maximo 16) o Ejecute una Prueba Presionando 'p': ");
+Console.Write("Ingrese la cantidad de ciudades (Max. 17, Rec. 15) o presione 'P' para prueba: ");
 
 // Decide si ejecutar el programa completo o directameten el BenchMark
 
@@ -20,15 +20,42 @@ if (Option == "p")
     return;
 }
 
-// Si el usuario escribe algo no valido, menor que 2 o mayor que 16, se asignan 16 por defecto
+// Si el usuario escribe algo no valido, menor que 2 o mayor que 17, se asignan 16 por defecto
 
-if (!int.TryParse(Option, out int numCities) || numCities < 2 || numCities > 16) // Intenta convertir el texto ingresado a entero y validar el rango
+if (!int.TryParse(Option, out int numCities) || numCities < 2 || numCities > 17) // Intenta convertir el texto ingresado a entero y validar el rango
 {
-    Console.WriteLine("Numero invalido. Se usaran 16 ciudades por defecto.");
-    numCities = 16;
+    Console.WriteLine("Numero invalido. Se usaran 13 ciudades por defecto.");
+    numCities = 13;
     //numCitiesalmacena el numero de ciudades ingresado por el usuario
     // Si el usuario escribe algo no valido, menor que 2 o mayor que 16, se asignan 16 por defecto
 }
+
+// Calculamos el factorial de (N - 1) para estimar las rutas posibles
+
+double rutasPosibles = 1;
+for (int i = 1; i < numCities; i++)
+{
+    rutasPosibles *= i;
+}
+
+// Formateamos el numero para que sea mas legible (Billones, millones, etc...)
+string mensajeCantidad;
+if (rutasPosibles >= 1_000_000_000_000)
+{
+    mensajeCantidad = $"{rutasPosibles / 1_000_000_000_000:F2} billones";
+}
+else if (rutasPosibles >= 1_000_000)
+{
+    mensajeCantidad = $"{rutasPosibles / 1_000_000} millones";
+}
+else
+{
+    mensajeCantidad = rutasPosibles.ToString("NO");
+}
+
+Console.ForegroundColor = ConsoleColor.Green; // Color para resaltar
+Console.WriteLine($"\n=> Para {numCities} ciudades se estiman aprox. {mensajeCantidad} de rutas unicas ((N-1)!)");
+Console.ResetColor();
 
 // MENU DE SEMILLAS 
 Console.WriteLine("\nSeleccione el tipo de semilla:");

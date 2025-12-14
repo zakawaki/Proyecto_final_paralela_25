@@ -1,13 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TSPProject
 {
     public class TSPSolverParallel
     {
-        public double BestCost { get; private set; }
+        
+        private double _bestCost;
+
+        /// <summary>
+        /// Obtiene o establece el mejor costo actual. 
+        /// Utiliza operaciones Volatile para asegurar la visibilidad inmediata 
+        /// del valor entre multiples hilos y evitar lecturas de cache obsoletas
+        /// </summary>
+        public double BestCost
+        {
+            get { return Volatile.Read(ref _bestCost); }
+            private set { Volatile.Write(ref _bestCost, value); }
+        }
+
         public List<int> BestRoute { get; private set; }
 
         private readonly object _lockObj = new object();
