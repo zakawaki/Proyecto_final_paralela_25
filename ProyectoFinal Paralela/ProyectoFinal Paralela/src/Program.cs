@@ -60,7 +60,7 @@ Console.ResetColor();
 // MENU DE SEMILLAS 
 Console.WriteLine("\nSeleccione el tipo de semilla:");
 Console.WriteLine("1. Semilla Fija (siempre genera los mismos datos)");
-Console.WriteLine("2. Semilla Aleatoria / Hibrida");
+Console.WriteLine("2. Semilla Aleatoria");
 Console.Write("Opcion: ");
 
 // seedOption: guarda la opcion que el usuario escriba
@@ -111,7 +111,7 @@ Console.WriteLine();
 Console.WriteLine("Seleccione el modo de ejecucion:");
 Console.WriteLine("1. Secuencial");
 Console.WriteLine("2. Paralelo ");
-Console.WriteLine("3. Pruebas y Metricas ");
+//Console.WriteLine("3. Pruebas y Metricas ");
 Console.Write("Opcion: ");
 
 string option = Console.ReadLine();
@@ -166,7 +166,7 @@ switch (option)
         Console.WriteLine($"Tiempo de ejecucion: {sw_pl.ElapsedMilliseconds} ms");
         break;
 
-    case "3":
+    //case "3":
         //Console.WriteLine("Ejecutando Pruebas y Metricas...");
         //var benchmark = new BenchmarkRunner();
         //benchmark.RunBenchmarks();

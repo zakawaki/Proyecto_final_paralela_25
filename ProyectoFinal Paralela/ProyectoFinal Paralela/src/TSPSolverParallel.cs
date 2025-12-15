@@ -21,10 +21,12 @@ namespace TSPProject
             get { return Volatile.Read(ref _bestCost); }
             private set { Volatile.Write(ref _bestCost, value); }
         }
+        
+        private readonly object _lockObj = new object();
 
         public List<int> BestRoute { get; private set; }
 
-        private readonly object _lockObj = new object();
+        
         private double[,] _distance;
         private int _numCities;
 
